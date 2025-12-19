@@ -1,0 +1,487 @@
+{% extends "base.html" %}
+
+{% block title %}Quiz - Einsthetic{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <!-- Quiz Header with Progress -->
+    <div class="bg-gradient-to-r from-accent-500 to-purple-600 p-8 rounded-2xl shadow-2xl mb-6">
+        <div class="flex justify-between items-center mb-4">
+            <div>
+                <h1 class="text-3xl font-bold text-white mb-2">GATE Quiz Challenge</h1>
+                <div class="flex gap-4 text-sm">
+                    <span class="bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm">
+                        📚 <span id="subject-display" class="font-semibold"></span>
+                    </span>
+                    <span id="difficulty-badge" class="px-3 py-1 rounded-full backdrop-blur-sm">
+                        🎯 <span id="difficulty-display" class="font-semibold"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="text-right">
+                <div class="text-4xl font-bold text-white" id="question-counter">1/10</div>
+                <div class="text-sm text-white/80">Questions</div>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="bg-white/20 rounded-full h-3 overflow-hidden backdrop-blur-sm">
+            <div id="progress-bar" class="bg-white h-full transition-all duration-500 rounded-full" style="width: 10%">
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loading" class="text-center py-20">
+        <div class="relative">
+            <div class="animate-spin rounded-full h-20 w-20 border-t-4 border-b-4 border-accent-500 mx-auto"></div>
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-2xl">🧠</div>
+        </div>
+        <p class="mt-6 text-gray-400 text-lg">Generating 10 GATE-level questions...</p>
+        <p class="text-gray-500 text-sm mt-2">Professor Einsthetic is preparing your challenge</p>
+    </div>
+
+    <!-- Question Card -->
+    <div id="quiz-container" class="hidden">
+        <div class="bg-dark-800 rounded-2xl shadow-2xl border border-gray-700 overflow-hidden">
+            <!-- Question Header -->
+            <div class="bg-dark-700 px-8 py-4 border-b border-gray-600 flex justify-between items-center">
+                <div class="flex gap-3 items-center">
+                    <span id="q-type" class="bg-accent-500 text-white text-xs font-bold px-3 py-1 rounded-full"></span>
+                    <span class="text-gray-400 text-sm">GATE Computer Science</span>
+                </div>
+                <div id="answered-indicator" class="hidden">
+                    <span class="bg-green-500/20 text-green-400 text-xs font-semibold px-3 py-1 rounded-full">
+                        ✓ Answered
+                    </span>
+                </div>
+            </div>
+
+            <!-- Question Content -->
+            <div class="p-8">
+                <div id="q-text"
+                    class="text-xl leading-relaxed mb-8 text-white font-medium whitespace-pre-wrap min-h-[100px]"></div>
+
+                <!-- Options (MCQ/MSQ) -->
+                <div id="options-container" class="space-y-3 mb-6"></div>
+
+                <!-- Input (NAT) -->
+                <div id="nat-container" class="hidden mb-6">
+                    <input type="number" step="any" id="nat-input" placeholder="Enter your numerical answer"
+                        class="w-full bg-dark-900 border-2 border-dark-600 p-5 rounded-xl text-lg focus:ring-2 focus:ring-accent-500 focus:border-accent-500 outline-none transition-all">
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex gap-4 mt-6">
+            <button id="prev-btn" onclick="navigateQuestion(-1)"
+                class="flex-1 bg-dark-700 hover:bg-dark-600 text-white font-semibold py-4 rounded-xl transition-all border border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed">
+                ← Previous
+            </button>
+            <button id="next-btn" onclick="navigateQuestion(1)"
+                class="flex-1 bg-accent-500 hover:bg-accent-400 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-accent-500/30">
+                Next →
+            </button>
+            <button id="submit-btn" onclick="submitQuiz()"
+                class="hidden flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-green-500/30">
+                Submit Quiz 🎯
+            </button>
+        </div>
+
+        <!-- Question Navigator -->
+        <div class="mt-6 bg-dark-800 p-6 rounded-2xl border border-gray-700">
+            <h3 class="text-sm font-semibold text-gray-400 mb-3">Question Navigator</h3>
+            <div id="question-nav" class="grid grid-cols-10 gap-2"></div>
+        </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="results-container" class="hidden">
+        <!-- Score Summary -->
+        <div
+            class="bg-gradient-to-br from-dark-800 to-dark-700 rounded-2xl shadow-2xl border border-gray-600 p-10 text-center mb-6">
+            <div class="mb-6">
+                <div class="text-6xl mb-4">🎊</div>
+                <h2 class="text-4xl font-bold text-white mb-2">Quiz Complete!</h2>
+                <p class="text-gray-400">Here's your performance summary:</p>
+            </div>
+
+            <div class="bg-dark-900 rounded-xl p-8 mb-6">
+                <div class="text-7xl font-bold mb-2">
+                    <span id="score-display"
+                        class="bg-gradient-to-r from-accent-400 to-purple-500 bg-clip-text text-transparent">0/10</span>
+                </div>
+                <div class="text-xl text-gray-300" id="percentage-display">0% Correct</div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-green-500/10 border border-green-500/30 rounded-xl p-4">
+                    <div class="text-3xl font-bold text-green-400" id="correct-count">0</div>
+                    <div class="text-sm text-gray-400">Correct</div>
+                </div>
+                <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4">
+                    <div class="text-3xl font-bold text-red-400" id="incorrect-count">0</div>
+                    <div class="text-sm text-gray-400">Incorrect</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Answer Review -->
+        <div class="bg-dark-800 rounded-2xl shadow-2xl border border-gray-700 p-8 mb-6">
+            <h3 class="text-2xl font-bold text-white mb-6">📝 Answer Review</h3>
+            <div id="answer-review" class="space-y-6">
+                <!-- Review items will be injected here -->
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-4">
+            <a href="/dashboard"
+                class="flex-1 bg-accent-500 hover:bg-accent-400 text-white font-bold py-4 rounded-xl transition-all text-center">
+                View Dashboard 📊
+            </a>
+            <a href="/quiz-setup"
+                class="flex-1 bg-dark-700 hover:bg-dark-600 text-white font-semibold py-4 rounded-xl transition-all border border-gray-600 text-center">
+                Take Another Quiz
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Quiz State
+    let questions = [];
+    let currentIndex = 0;
+    let userAnswers = Array(10).fill(null);
+    let startTime = Date.now();
+
+    // Get URL params
+    const urlParams = new URLSearchParams(window.location.search);
+    const subject = urlParams.get('subject') || 'Algorithms';
+    const difficulty = urlParams.get('difficulty') || 'Medium';
+
+    // Initialize UI
+    document.getElementById('subject-display').innerText = subject;
+    document.getElementById('difficulty-display').innerText = difficulty;
+
+    // Color code difficulty
+    const diffBadge = document.getElementById('difficulty-badge');
+    if (difficulty === 'Easy') diffBadge.className = 'bg-green-500/20 px-3 py-1 rounded-full backdrop-blur-sm';
+    if (difficulty === 'Medium') diffBadge.className = 'bg-yellow-500/20 px-3 py-1 rounded-full backdrop-blur-sm';
+    if (difficulty === 'Hard') diffBadge.className = 'bg-red-500/20 px-3 py-1 rounded-full backdrop-blur-sm';
+
+    // Generate all questions on load
+    document.addEventListener('DOMContentLoaded', async () => {
+        await generateAllQuestions();
+    });
+
+    async function generateAllQuestions() {
+        try {
+            document.getElementById('loading').classList.remove('hidden');
+
+            for (let i = 0; i < 10; i++) {
+                const res = await fetch('/api/generate_question', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ subject, difficulty })
+                });
+
+                const question = await res.json();
+                questions.push(question);
+            }
+
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
+            initializeQuestionNavigator();
+            renderQuestion();
+        } catch (e) {
+            alert('Error generating questions: ' + e.message);
+        }
+    }
+
+    function initializeQuestionNavigator() {
+        const nav = document.getElementById('question-nav');
+        nav.innerHTML = '';
+
+        for (let i = 0; i < 10; i++) {
+            const btn = document.createElement('button');
+            btn.className = 'aspect-square bg-dark-700 hover:bg-dark-600 border border-gray-600 rounded-lg text-sm font-semibold transition-all';
+            btn.innerText = i + 1;
+            btn.onclick = () => jumpToQuestion(i);
+            nav.appendChild(btn);
+        }
+    }
+
+    function renderQuestion() {
+        const q = questions[currentIndex];
+
+        // Update counter and progress
+        document.getElementById('question-counter').innerText = `${currentIndex + 1}/10`;
+        document.getElementById('progress-bar').style.width = `${(currentIndex + 1) * 10}%`;
+
+        // Render question
+        document.getElementById('q-text').innerHTML = q.question;
+        document.getElementById('q-type').innerText = q.type;
+
+        const optsContainer = document.getElementById('options-container');
+        const natContainer = document.getElementById('nat-container');
+
+        optsContainer.innerHTML = '';
+
+        if (q.type === 'MCQ' || q.type === 'MSQ') {
+            natContainer.classList.add('hidden');
+            optsContainer.classList.remove('hidden');
+
+            Object.entries(q.options).forEach(([key, val]) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn bg-dark-900 border-2 border-dark-600 p-4 rounded-xl text-left hover:border-accent-500 transition-all flex items-start gap-3';
+                btn.innerHTML = `<span class="font-bold text-accent-400 text-lg">${key}</span> <span class="flex-1">${val}</span>`;
+                btn.onclick = () => selectOption(key, btn);
+
+                // Restore previous selection
+                if (userAnswers[currentIndex] === key) {
+                    btn.classList.add('ring-2', 'ring-accent-500', 'bg-dark-700', 'border-accent-500');
+                }
+
+                optsContainer.appendChild(btn);
+            });
+        } else {
+            natContainer.classList.remove('hidden');
+            optsContainer.classList.add('hidden');
+            document.getElementById('nat-input').value = userAnswers[currentIndex] || '';
+        }
+
+        // Update navigation buttons
+        document.getElementById('prev-btn').disabled = currentIndex === 0;
+
+        if (currentIndex === 9) {
+            document.getElementById('next-btn').classList.add('hidden');
+            document.getElementById('submit-btn').classList.remove('hidden');
+        } else {
+            document.getElementById('next-btn').classList.remove('hidden');
+            document.getElementById('submit-btn').classList.add('hidden');
+        }
+
+        // Update answered indicator
+        if (userAnswers[currentIndex] !== null) {
+            document.getElementById('answered-indicator').classList.remove('hidden');
+        } else {
+            document.getElementById('answered-indicator').classList.add('hidden');
+        }
+
+        // Update question navigator
+        updateQuestionNavigator();
+
+        // Render MathJax
+        if (window.MathJax) {
+            MathJax.typesetPromise();
+        }
+    }
+
+    function selectOption(key, btn) {
+        const q = questions[currentIndex];
+
+        if (q.type === 'MCQ') {
+            userAnswers[currentIndex] = key;
+            document.querySelectorAll('.option-btn').forEach(b => {
+                b.classList.remove('ring-2', 'ring-accent-500', 'bg-dark-700', 'border-accent-500');
+            });
+            btn.classList.add('ring-2', 'ring-accent-500', 'bg-dark-700', 'border-accent-500');
+        }
+
+        document.getElementById('answered-indicator').classList.remove('hidden');
+        updateQuestionNavigator();
+    }
+
+    function navigateQuestion(direction) {
+        // Save NAT answer if applicable
+        const q = questions[currentIndex];
+        if (q.type === 'NAT') {
+            userAnswers[currentIndex] = document.getElementById('nat-input').value || null;
+        }
+
+        currentIndex += direction;
+        if (currentIndex < 0) currentIndex = 0;
+        if (currentIndex > 9) currentIndex = 9;
+
+        renderQuestion();
+    }
+
+    function jumpToQuestion(index) {
+        // Save current answer first
+        const q = questions[currentIndex];
+        if (q.type === 'NAT') {
+            userAnswers[currentIndex] = document.getElementById('nat-input').value || null;
+        }
+
+        currentIndex = index;
+        renderQuestion();
+    }
+
+    function updateQuestionNavigator() {
+        const navButtons = document.querySelectorAll('#question-nav button');
+        navButtons.forEach((btn, i) => {
+            btn.classList.remove('bg-accent-500', 'text-white', 'bg-dark-700');
+
+            if (i === currentIndex) {
+                btn.classList.add('bg-accent-500', 'text-white');
+            } else if (userAnswers[i] !== null) {
+                btn.classList.add('bg-green-500/30', 'border-green-500');
+            } else {
+                btn.classList.add('bg-dark-700');
+            }
+        });
+    }
+
+    async function submitQuiz() {
+        // Save final answer
+        const q = questions[currentIndex];
+        if (q.type === 'NAT') {
+            userAnswers[currentIndex] = document.getElementById('nat-input').value || null;
+        }
+
+        // Check if all questions answered
+        const unanswered = userAnswers.filter(a => a === null).length;
+        if (unanswered > 0) {
+            if (!confirm(`You have ${unanswered} unanswered question(s). Submit anyway?`)) {
+                return;
+            }
+        }
+
+        // Calculate score
+        let correctCount = 0;
+        const totalTime = Math.round((Date.now() - startTime) / 1000);
+
+        // Prepare batch save
+        const attempts = [];
+
+        for (let i = 0; i < 10; i++) {
+            const question = questions[i];
+            const userAnswer = userAnswers[i];
+            const isCorrect = checkAnswer(userAnswer, question.correct_answer, question.type);
+
+            if (isCorrect) correctCount++;
+
+            attempts.push({
+                subject: subject,
+                difficulty: difficulty,
+                score: isCorrect ? 2 : 0,
+                is_correct: isCorrect,
+                time_taken: Math.round(totalTime / 10), // Distribute time evenly
+                question_data: question
+            });
+        }
+
+        // Save all attempts
+        try {
+            for (const attempt of attempts) {
+                await fetch('/api/save_attempt', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(attempt)
+                });
+            }
+
+            // Show results
+            showResults(correctCount);
+        } catch (e) {
+            alert('Error saving quiz: ' + e.message);
+        }
+    }
+
+    function checkAnswer(userAns, correctAns, type) {
+        if (!userAns) return false;
+
+        if (type === 'NAT') {
+            return Math.abs(parseFloat(userAns) - parseFloat(correctAns)) < 0.01;
+        }
+
+        return userAns.trim().toUpperCase() === correctAns.trim().toUpperCase();
+    }
+
+    function showResults(correctCount) {
+        document.getElementById('quiz-container').classList.add('hidden');
+        document.getElementById('results-container').classList.remove('hidden');
+
+        const incorrectCount = 10 - correctCount;
+        const percentage = (correctCount / 10 * 100).toFixed(0);
+
+        document.getElementById('score-display').innerText = `${correctCount}/10`;
+        document.getElementById('percentage-display').innerText = `${percentage}% Correct`;
+        document.getElementById('correct-count').innerText = correctCount;
+        document.getElementById('incorrect-count').innerText = incorrectCount;
+
+        renderAnswerReview();
+    }
+
+    function renderAnswerReview() {
+        const reviewContainer = document.getElementById('answer-review');
+        reviewContainer.innerHTML = '';
+
+        questions.forEach((q, index) => {
+            const userAnswer = userAnswers[index];
+            const isCorrect = checkAnswer(userAnswer, q.correct_answer, q.type);
+
+            const reviewItem = document.createElement('div');
+            reviewItem.className = `border ${isCorrect ? 'border-green-500/30 bg-green-500/5' : 'border-red-500/30 bg-red-500/5'} rounded-xl p-6`;
+
+            reviewItem.innerHTML = `
+                <div class="flex justify-between items-start mb-4">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">${isCorrect ? '✅' : '❌'}</span>
+                        <span class="font-bold text-lg text-white">Question ${index + 1}</span>
+                        <span class="text-xs px-2 py-1 rounded-full ${q.type === 'MCQ' ? 'bg-blue-500/20 text-blue-400' :
+                    q.type === 'MSQ' ? 'bg-purple-500/20 text-purple-400' :
+                        'bg-orange-500/20 text-orange-400'
+                }">${q.type}</span>
+                    </div>
+                    <span class="text-sm text-gray-400">${isCorrect ? 'Correct' : 'Incorrect'}</span>
+                </div>
+                
+                <div class="mb-4 text-gray-200 leading-relaxed">${q.question}</div>
+                
+                ${q.options ? `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mb-4">
+                        ${Object.entries(q.options).map(([key, val]) => `
+                            <div class="p-3 rounded-lg text-sm ${key === q.correct_answer ? 'bg-green-500/20 border border-green-500/50' :
+                        key === userAnswer ? 'bg-red-500/20 border border-red-500/50' :
+                            'bg-dark-700/50'
+                    }">
+                                <span class="font-bold ${key === q.correct_answer ? 'text-green-400' :
+                        key === userAnswer ? 'text-red-400' :
+                            'text-gray-400'
+                    }">${key}.</span> ${val}
+                                ${key === q.correct_answer ? ' <span class="text-green-400">✓</span>' : ''}
+                                ${key === userAnswer && key !== q.correct_answer ? ' <span class="text-red-400">✗</span>' : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : `
+                    <div class="mb-4 space-y-2">
+                        <div class="p-3 bg-dark-700 rounded-lg text-sm">
+                            <span class="text-gray-400">Your Answer:</span> 
+                            <span class="${isCorrect ? 'text-green-400' : 'text-red-400'} font-semibold">${userAnswer || 'No answer'}</span>
+                        </div>
+                        <div class="p-3 bg-green-500/10 border border-green-500/30 rounded-lg text-sm">
+                            <span class="text-gray-400">Correct Answer:</span> 
+                            <span class="text-green-400 font-semibold">${q.correct_answer}</span>
+                        </div>
+                    </div>
+                `}
+                
+                <div class="bg-dark-900 rounded-lg p-4 border border-gray-700">
+                    <div class="text-sm font-semibold text-accent-400 mb-2">💡 Explanation:</div>
+                    <div class="text-gray-300 text-sm leading-relaxed">${q.explanation}</div>
+                </div>
+            `;
+
+            reviewContainer.appendChild(reviewItem);
+        });
+
+        if (window.MathJax) {
+            MathJax.typesetPromise();
+        }
+    }
+</script>
+{% endblock %}

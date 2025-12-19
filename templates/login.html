@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Einsthetic{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center h-[80vh]">
+    <div
+        class="bg-dark-800 p-8 rounded-2xl shadow-2xl border border-gray-700 w-full max-w-md backdrop-blur-sm bg-opacity-90">
+        <h1 class="text-3xl font-bold mb-2 text-center text-white">Welcome Back</h1>
+        <p class="text-gray-400 mb-8 text-center">Sign in to continue your GATE preparation.</p>
+
+        <form id="login-form" class="space-y-4 mb-6">
+            <div>
+                <label class="block text-gray-300 text-sm font-bold mb-2" for="email">Email</label>
+                <input
+                    class="w-full bg-dark-900 border border-dark-700 rounded-lg py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-accent-500"
+                    id="email" type="email" placeholder="student@example.com" required>
+            </div>
+            <div>
+                <label class="block text-gray-300 text-sm font-bold mb-2" for="password">Password</label>
+                <input
+                    class="w-full bg-dark-900 border border-dark-700 rounded-lg py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-accent-500"
+                    id="password" type="password" placeholder="••••••••" required>
+            </div>
+            <button type="submit"
+                class="w-full bg-accent-500 hover:bg-accent-400 text-white font-bold py-3 rounded-lg transition-all shadow-lg shadow-accent-500/20">
+                Log In
+            </button>
+        </form>
+
+        <div class="relative mb-6">
+            <div class="absolute inset-0 flex items-center">
+                <div class="w-full border-t border-gray-700"></div>
+            </div>
+            <div class="relative flex justify-center text-sm">
+                <span class="px-2 bg-dark-800 text-gray-500">Or continue with</span>
+            </div>
+        </div>
+
+        <button id="google-login-btn"
+            class="w-full bg-white text-gray-900 py-3 rounded-lg font-semibold flex items-center justify-center gap-3 hover:bg-gray-100 transition-all hover:scale-[1.02]">
+            <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="h-6 w-6" alt="Google">
+            Sign in with Google
+        </button>
+
+        <div class="mt-6 text-center">
+            <p class="text-gray-400 text-sm">
+                Don't have an account?
+                <a href="/signup" class="text-accent-400 hover:text-white transition-colors font-semibold">Sign Up</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const provider = new firebase.auth.GoogleAuthProvider();
+
+    async function handleSessionLogin(user) {
+        const idToken = await user.getIdToken();
+        const res = await fetch('/api/session_login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ idToken: idToken })
+        });
+        if (res.ok) {
+            window.location.href = '/dashboard';
+        } else {
+            console.error("Session login failed");
+        }
+    }
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        try {
+            const result = await firebase.auth().signInWithEmailAndPassword(email, password);
+            await handleSessionLogin(result.user);
+        } catch (error) {
+            alert("Login Error: " + error.message);
+        }
+    });
+
+    document.getElementById('google-login-btn').addEventListener('click', () => {
+        firebase.auth().signInWithPopup(provider)
+            .then((result) => {
+                handleSessionLogin(result.user);
+            }).catch((error) => {
+                console.error("Login failed:", error);
+                alert("Login Error: " + error.message);
+            });
+    });
+</script>
+{% endblock %}

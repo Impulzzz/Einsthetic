@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Einsthetic{% endblock %}</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            900: '#0f172a',
+                            800: '#1e293b',
+                            700: '#334155',
+                        },
+                        accent: {
+                            500: '#6366f1', // Indigo 500
+                            400: '#818cf8', // Indigo 400
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- MathJax -->
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- Firebase SDK (Modular CDNs for simplicity in this prototype, or compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            },
+            chtml: {
+                displayAlign: 'left'
+            }
+        };
+    </script>
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Force MathJax to inherit color or be white in dark mode */
+        .mjx-chtml,
+        .MathJax_Display,
+        .MathJax {
+            color: inherit !important;
+        }
+
+        /* Fallback if inheritance fails */
+        .dark .mjx-chtml,
+        .dark .MathJax_Display,
+        .dark .MathJax {
+            color: #e2e8f0 !important;
+            /* gray-200 */
+        }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+
+<body class="bg-dark-900 text-white min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <nav class="p-4 border-b border-gray-800 bg-dark-900/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="/" class="text-2xl font-bold tracking-tight text-accent-400">Einsthetic<span
+                    class="text-white">.AI</span></a>
+            <div id="nav-links" class="hidden space-x-6">
+                <a href="/dashboard" class="hover:text-accent-400 transition-colors">Dashboard</a>
+                <a href="/quiz" class="hover:text-accent-400 transition-colors">Quiz</a>
+                <button onclick="logout()" class="text-gray-400 hover:text-white transition-colors">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <main class="flex-grow container mx-auto p-6">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="p-4 text-center text-gray-600 text-sm">
+        &copy; 2024 Einsthetic AI. Built for GATE Aspirants.
+    </footer>
+
+    <script>
+        // Firebase Config (Placeholder - to be replaced by dynamic vars or explicit config)
+        const firebaseConfig = {
+            apiKey: "{{ config.apiKey }}",
+            authDomain: "{{ config.authDomain }}",
+            projectId: "{{ config.projectId }}",
+            storageBucket: "{{ config.storageBucket }}",
+            messagingSenderId: "{{ config.messagingSenderId }}",
+            appId: "{{ config.appId }}"
+        };
+        firebase.initializeApp(firebaseConfig);
+
+        function logout() {
+            firebase.auth().signOut().then(() => {
+                window.location.href = '/logout';
+            });
+        }
+
+        // Show nav on protected routes or when Firebase user is authenticated
+        const protectedPaths = ['/dashboard', '/quiz', '/quiz-setup'];
+        const currentPath = window.location.pathname;
+        const isProtectedRoute = protectedPaths.some(path => currentPath.startsWith(path));
+
+        firebase.auth().onAuthStateChanged(user => {
+            const nav = document.getElementById('nav-links');
+            if (user || isProtectedRoute) {
+                // Show nav if Firebase user exists OR if we're on a protected route
+                if (nav) nav.classList.remove('hidden');
+            } else {
+                if (nav) nav.classList.add('hidden');
+            }
+        });
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>
