@@ -3,16 +3,32 @@
 {% block title %}Quiz Setup - Einsthetic{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto">
-    <div class="mb-8 text-center">
-        <h1 class="text-3xl font-bold text-white mb-2">Configure Your Drill</h1>
-        <p class="text-gray-400">Select a subject and challenge level to begin.</p>
+<!-- Background -->
+<div class="fixed top-1/4 left-1/4 w-[400px] h-[400px] bg-purple-500/5 rounded-full blur-3xl pointer-events-none -z-10">
+</div>
+<div
+    class="fixed bottom-1/4 right-1/4 w-[300px] h-[300px] bg-accent-500/5 rounded-full blur-3xl pointer-events-none -z-10">
+</div>
+
+<div class="max-w-5xl mx-auto py-8">
+    <div class="text-center mb-10 animate-slide-up">
+        <h1 class="text-4xl font-display font-bold text-white mb-3">
+            Configure Your <span class="gradient-text">Drill</span>
+        </h1>
+        <p class="text-gray-400">Customize your practice session to target specific areas.</p>
     </div>
 
-    <div class="bg-dark-800 p-8 rounded-2xl shadow-lg border border-gray-700">
+    <div class="glass p-8 rounded-3xl border border-gray-800 animate-slide-up" style="animation-delay: 0.1s;">
         <!-- Subject Selection -->
-        <div class="mb-8">
-            <label class="block text-gray-300 text-lg font-bold mb-4">Select Subject</label>
+        <div class="mb-10">
+            <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                <svg class="w-6 h-6 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
+                    </path>
+                </svg>
+                Select Subject
+            </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {% set subjects = [
                 "Engineering Mathematics",
@@ -27,11 +43,21 @@
                 ] %}
 
                 {% for sub in subjects %}
-                <label class="cursor-pointer relative">
+                <label class="cursor-pointer relative group">
                     <input type="radio" name="subject" value="{{ sub }}" class="peer sr-only">
                     <div
-                        class="p-4 rounded-xl border border-dark-700 bg-dark-900 peer-checked:border-accent-500 peer-checked:bg-accent-500/10 transition-all hover:border-gray-500">
-                        <div class="font-semibold text-gray-200 peer-checked:text-accent-400">{{ sub }}</div>
+                        class="h-full p-4 rounded-2xl border border-gray-700 bg-dark-900/50 hover:bg-dark-800 hover:border-accent-500/50 peer-checked:border-accent-500 peer-checked:bg-accent-500/10 peer-checked:shadow-lg peer-checked:shadow-accent-500/10 transition-all duration-200">
+                        <div
+                            class="font-medium text-gray-300 group-hover:text-white peer-checked:text-accent-300 transition-colors">
+                            {{ sub }}</div>
+                    </div>
+                    <!-- Checkmark -->
+                    <div
+                        class="absolute top-4 right-4 opacity-0 peer-checked:opacity-100 transition-all scale-50 peer-checked:scale-100 text-accent-400">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                            </path>
+                        </svg>
                     </div>
                 </label>
                 {% endfor %}
@@ -39,39 +65,60 @@
         </div>
 
         <!-- Difficulty Selection -->
-        <div class="mb-8">
-            <label class="block text-gray-300 text-lg font-bold mb-4">Difficulty Level</label>
+        <div class="mb-10">
+            <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+                Difficulty Level
+            </h2>
             <div class="grid grid-cols-3 gap-4">
-                <label class="cursor-pointer relative">
+                <!-- Easy -->
+                <label class="cursor-pointer relative group">
                     <input type="radio" name="difficulty" value="Easy" class="peer sr-only">
                     <div
-                        class="p-4 text-center rounded-xl border border-dark-700 bg-dark-900 peer-checked:border-green-500 peer-checked:bg-green-500/10 transition-all hover:border-gray-500">
-                        <div class="font-bold text-green-400">Easy</div>
-                        <div class="text-xs text-gray-500 mt-1">Basic concepts</div>
+                        class="p-6 text-center rounded-2xl border border-gray-700 bg-dark-900/50 hover:border-green-500/50 peer-checked:border-green-500 peer-checked:bg-green-500/10 transition-all">
+                        <div class="font-bold text-lg text-green-400 mb-1">Easy</div>
+                        <div class="text-xs text-gray-500 group-hover:text-gray-400 transition">Basic Concepts</div>
                     </div>
                 </label>
-                <label class="cursor-pointer relative">
+
+                <!-- Medium -->
+                <label class="cursor-pointer relative group">
                     <input type="radio" name="difficulty" value="Medium" class="peer sr-only" checked>
                     <div
-                        class="p-4 text-center rounded-xl border border-dark-700 bg-dark-900 peer-checked:border-yellow-500 peer-checked:bg-yellow-500/10 transition-all hover:border-gray-500">
-                        <div class="font-bold text-yellow-500">Medium</div>
-                        <div class="text-xs text-gray-500 mt-1">Standard GATE</div>
+                        class="p-6 text-center rounded-2xl border border-gray-700 bg-dark-900/50 hover:border-yellow-500/50 peer-checked:border-yellow-500 peer-checked:bg-yellow-500/10 transition-all">
+                        <div class="font-bold text-lg text-yellow-400 mb-1">Medium</div>
+                        <div class="text-xs text-gray-500 group-hover:text-gray-400 transition">Standard GATE</div>
                     </div>
                 </label>
-                <label class="cursor-pointer relative">
+
+                <!-- Hard -->
+                <label class="cursor-pointer relative group">
                     <input type="radio" name="difficulty" value="Hard" class="peer sr-only">
                     <div
-                        class="p-4 text-center rounded-xl border border-dark-700 bg-dark-900 peer-checked:border-red-500 peer-checked:bg-red-500/10 transition-all hover:border-gray-500">
-                        <div class="font-bold text-red-500">Hard</div>
-                        <div class="text-xs text-gray-500 mt-1">Top Ranker</div>
+                        class="p-6 text-center rounded-2xl border border-gray-700 bg-dark-900/50 hover:border-red-500/50 peer-checked:border-red-500 peer-checked:bg-red-500/10 transition-all">
+                        <div class="font-bold text-lg text-red-500 mb-1">Hard</div>
+                        <div class="text-xs text-gray-500 group-hover:text-gray-400 transition">Top Ranker</div>
                     </div>
                 </label>
             </div>
         </div>
 
         <button onclick="startQuiz()"
-            class="w-full bg-accent-500 hover:bg-accent-400 text-white font-bold py-4 rounded-xl text-lg transition-all shadow-lg shadow-accent-500/20">
-            Start Quiz
+            class="group w-full relative overflow-hidden rounded-xl bg-gradient-to-r from-accent-600 to-purple-600 p-4 text-white font-bold text-lg shadow-lg shadow-accent-500/20 transition-all hover:shadow-accent-500/40 hover:-translate-y-1">
+            <span class="relative z-10 flex items-center justify-center gap-2">
+                Start Quiz
+                <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3">
+                    </path>
+                </svg>
+            </span>
+            <div
+                class="absolute inset-0 bg-gradient-to-r from-accent-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            </div>
         </button>
     </div>
 </div>
@@ -84,16 +131,26 @@
         const difficulty = document.querySelector('input[name="difficulty"]:checked');
 
         if (!subject) {
+            // Toast notification would be better here, but alert is fine for now
             alert("Please select a subject!");
             return;
         }
+
+        // Show loading state on button
+        const btn = document.querySelector('button');
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = `<span class="flex items-center justify-center gap-2"><div class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> Preparing...</span>`;
+        btn.disabled = true;
 
         const params = new URLSearchParams({
             subject: subject.value,
             difficulty: difficulty.value
         });
 
-        window.location.href = `/quiz?${params.toString()}`;
+        // Small delay for UX feel
+        setTimeout(() => {
+            window.location.href = `/quiz?${params.toString()}`;
+        }, 500);
     }
 </script>
 {% endblock %}

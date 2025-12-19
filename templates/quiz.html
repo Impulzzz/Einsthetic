@@ -273,10 +273,13 @@
         // Update question navigator
         updateQuestionNavigator();
 
-        // Render MathJax
-        if (window.MathJax) {
-            MathJax.typesetPromise();
-        }
+        // Render MathJax - ensure it's loaded first
+        setTimeout(() => {
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                MathJax.typesetPromise([document.getElementById('q-text'), document.getElementById('options-container')])
+                    .catch((err) => console.log('MathJax error:', err));
+            }
+        }, 100);
     }
 
     function selectOption(key, btn) {

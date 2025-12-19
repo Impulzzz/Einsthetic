@@ -1,75 +1,152 @@
 {% extends "base.html" %}
 
-{% block title %}Einsthetic - GATE CS AI Tutor{% endblock %}
+{% block title %}Einsthetic - Your AI GATE CS Professor{% endblock %}
 
 {% block content %}
-<div class="flex flex-col items-center justify-center min-h-[80vh] text-center">
+<!-- Animated Background -->
+<div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute top-20 left-10 w-72 h-72 bg-accent-500/10 rounded-full blur-3xl animate-float"></div>
+    <div class="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-float"
+        style="animation-delay: 1s;"></div>
+</div>
+
+<div class="relative flex flex-col items-center justify-center min-h-[85vh] text-center">
     <!-- Hero Section -->
-    <div class="max-w-4xl mx-auto px-6">
-        <h1
-            class="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-indigo-100 to-indigo-200 mb-6 drop-shadow-2xl">
-            Master GATE CS with <br />
-            <span class="text-accent-400">AI Precision</span>
+    <div class="max-w-5xl mx-auto px-6 py-12 animate-slide-up">
+        <!-- Badge -->
+        <div class="inline-flex items-center space-x-2 px-4 py-2 rounded-full glass border border-accent-500/20 mb-8">
+            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+            <span class="text-sm text-gray-300 font-medium">Powered by Groq AI</span>
+        </div>
+
+        <!-- Main Headline -->
+        <h1 class="text-6xl md:text-8xl font-display font-extrabold mb-6 leading-tight">
+            <span class="block mb-2">Master GATE CS</span>
+            <span class="gradient-text">with AI Precision</span>
         </h1>
-        <p class="text-xl text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+
+        <!-- Subheadline -->
+        <p class="text-xl md:text-2xl text-gray-400 mb-12 max-w-3xl mx-auto leading-relaxed font-light">
             Your personal AI Professor for Computer Science.
-            Generate infinite GATE-level questions, track your proficiency with advanced analytics,
-            and conquer the syllabus with style.
+            <span class="text-gray-300 font-medium">Generate infinite GATE-level questions</span>,
+            track your proficiency with advanced analytics, and
+            <span class="text-gray-300 font-medium">conquer the syllabus</span> with style.
         </p>
 
+        <!-- CTA Buttons -->
         <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <a href="/signup"
-                class="px-8 py-4 bg-accent-500 hover:bg-accent-400 text-white font-bold rounded-xl text-lg transition-all shadow-lg shadow-accent-500/25 hover:shadow-accent-500/40 hover:-translate-y-1 w-full sm:w-auto">
-                Get Started
+            <a href="/signup" class="group relative px-10 py-5 w-full sm:w-auto">
+                <div
+                    class="absolute inset-0 bg-gradient-to-r from-accent-500 to-purple-500 rounded-2xl blur opacity-75 group-hover:opacity-100 transition">
+                </div>
+                <div
+                    class="relative bg-gradient-to-r from-accent-600 to-purple-600 rounded-2xl px-10 py-5 text-white font-bold text-lg hover:from-accent-500 hover:to-purple-500 transition-all">
+                    Get Started Free
+                    <svg class="inline-block ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                    </svg>
+                </div>
             </a>
             <a href="/login"
-                class="px-8 py-4 bg-dark-800 hover:bg-dark-700 text-gray-200 font-bold rounded-xl text-lg border border-gray-700 transition-all hover:border-gray-500 w-full sm:w-auto">
+                class="px-10 py-5 glass border border-gray-700 hover:border-accent-500/50 text-gray-200 font-bold text-lg rounded-2xl transition-all hover:shadow-2xl hover:shadow-accent-500/10 w-full sm:w-auto">
                 Login
             </a>
+        </div>
+
+        <!-- Trust Indicators -->
+        <div class="mt-12 flex flex-wrap justify-center gap-8 text-gray-500 text-sm">
+            <div class="flex items-center space-x-2">
+                <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clip-rule="evenodd"></path>
+                </svg>
+                <span>Free Forever</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clip-rule="evenodd"></path>
+                </svg>
+                <span>Unlimited Questions</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clip-rule="evenodd"></path>
+                </svg>
+                <span>GATE Standard</span>
+            </div>
         </div>
     </div>
 
     <!-- Feature Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-24 max-w-6xl mx-auto px-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-20 max-w-6xl mx-auto px-6 w-full">
+        <!-- Feature Card 1 -->
         <div
-            class="p-8 rounded-2xl bg-dark-800/50 border border-dark-700 backdrop-blur-sm hover:border-accent-500/50 transition-colors">
-            <div
-                class="w-12 h-12 bg-indigo-500/20 rounded-lg flex items-center justify-center mb-4 mx-auto text-indigo-400">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                </svg>
+            class="group p-8 rounded-3xl glass border border-gray-800 hover:border-accent-500/50 transition-all hover:shadow-2xl hover:shadow-accent-500/10 hover:-translate-y-2">
+            <div class="relative w-14 h-14 mb-6">
+                <div class="absolute inset-0 bg-gradient-to-br from-accent-500/20 to-purple-500/20 rounded-2xl blur">
+                </div>
+                <div
+                    class="relative bg-gradient-to-br from-accent-500/10 to-purple-500/10 rounded-2xl w-14 h-14 flex items-center justify-center text-accent-400 group-hover:scale-110 transition-transform">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
             </div>
-            <h3 class="text-xl font-bold text-white mb-2">Infinite Questions</h3>
-            <p class="text-gray-400">Never run out of practice material. AI generates unique NAT and MCQ questions for
-                every subject.</p>
+            <h3 class="text-2xl font-display font-bold text-white mb-3">Infinite Questions</h3>
+            <p class="text-gray-400 leading-relaxed">
+                Never run out of practice material. AI generates unique NAT and MCQ questions for every subject,
+                tailored to your difficulty level.
+            </p>
         </div>
+
+        <!-- Feature Card 2 -->
         <div
-            class="p-8 rounded-2xl bg-dark-800/50 border border-dark-700 backdrop-blur-sm hover:border-accent-500/50 transition-colors">
-            <div
-                class="w-12 h-12 bg-pink-500/20 rounded-lg flex items-center justify-center mb-4 mx-auto text-pink-400">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
-                    </path>
-                </svg>
+            class="group p-8 rounded-3xl glass border border-gray-800 hover:border-accent-500/50 transition-all hover:shadow-2xl hover:shadow-accent-500/10 hover:-translate-y-2">
+            <div class="relative w-14 h-14 mb-6">
+                <div class="absolute inset-0 bg-gradient-to-br from-pink-500/20 to-rose-500/20 rounded-2xl blur"></div>
+                <div
+                    class="relative bg-gradient-to-br from-pink-500/10 to-rose-500/10 rounded-2xl w-14 h-14 flex items-center justify-center text-pink-400 group-hover:scale-110 transition-transform">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+                        </path>
+                    </svg>
+                </div>
             </div>
-            <h3 class="text-xl font-bold text-white mb-2">Smart Analytics</h3>
-            <p class="text-gray-400">Visualize your strengths and weaknesses with our radar charts and proficiency
-                tracking.</p>
+            <h3 class="text-2xl font-display font-bold text-white mb-3">Smart Analytics</h3>
+            <p class="text-gray-400 leading-relaxed">
+                Visualize your strengths and weaknesses with interactive radar charts, progress tracking, and detailed
+                proficiency metrics.
+            </p>
         </div>
+
+        <!-- Feature Card 3 -->
         <div
-            class="p-8 rounded-2xl bg-dark-800/50 border border-dark-700 backdrop-blur-sm hover:border-accent-500/50 transition-colors">
-            <div
-                class="w-12 h-12 bg-emerald-500/20 rounded-lg flex items-center justify-center mb-4 mx-auto text-emerald-400">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
+            class="group p-8 rounded-3xl glass border border-gray-800 hover:border-accent-500/50 transition-all hover:shadow-2xl hover:shadow-accent-500/10 hover:-translate-y-2">
+            <div class="relative w-14 h-14 mb-6">
+                <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-teal-500/20 rounded-2xl blur">
+                </div>
+                <div
+                    class="relative bg-gradient-to-br from-emerald-500/10 to-teal-500/10 rounded-2xl w-14 h-14 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
             </div>
-            <h3 class="text-xl font-bold text-white mb-2">GATE Standard</h3>
-            <p class="text-gray-400">Questions curated to match the difficulty and reasoning level of the actual GATE CS
-                exam.</p>
+            <h3 class="text-2xl font-display font-bold text-white mb-3">GATE Standard</h3>
+            <p class="text-gray-400 leading-relaxed">
+                Questions curated to match the exact difficulty and reasoning level of the actual GATE CS exam. Practice
+                like a pro.
+            </p>
         </div>
     </div>
 </div>

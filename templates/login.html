@@ -3,50 +3,83 @@
 {% block title %}Login - Einsthetic{% endblock %}
 
 {% block content %}
-<div class="flex items-center justify-center h-[80vh]">
-    <div
-        class="bg-dark-800 p-8 rounded-2xl shadow-2xl border border-gray-700 w-full max-w-md backdrop-blur-sm bg-opacity-90">
-        <h1 class="text-3xl font-bold mb-2 text-center text-white">Welcome Back</h1>
-        <p class="text-gray-400 mb-8 text-center">Sign in to continue your GATE preparation.</p>
+<!-- Background -->
+<div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute top-1/4 -left-20 w-96 h-96 bg-accent-500/5 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-1/4 -right-20 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"></div>
+</div>
 
-        <form id="login-form" class="space-y-4 mb-6">
-            <div>
-                <label class="block text-gray-300 text-sm font-bold mb-2" for="email">Email</label>
-                <input
-                    class="w-full bg-dark-900 border border-dark-700 rounded-lg py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-accent-500"
-                    id="email" type="email" placeholder="student@example.com" required>
-            </div>
-            <div>
-                <label class="block text-gray-300 text-sm font-bold mb-2" for="password">Password</label>
-                <input
-                    class="w-full bg-dark-900 border border-dark-700 rounded-lg py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-accent-500"
-                    id="password" type="password" placeholder="••••••••" required>
-            </div>
-            <button type="submit"
-                class="w-full bg-accent-500 hover:bg-accent-400 text-white font-bold py-3 rounded-lg transition-all shadow-lg shadow-accent-500/20">
-                Log In
-            </button>
-        </form>
-
-        <div class="relative mb-6">
-            <div class="absolute inset-0 flex items-center">
-                <div class="w-full border-t border-gray-700"></div>
-            </div>
-            <div class="relative flex justify-center text-sm">
-                <span class="px-2 bg-dark-800 text-gray-500">Or continue with</span>
-            </div>
+<div class="relative flex items-center justify-center min-h-[85vh] px-6">
+    <div class="w-full max-w-md">
+        <!-- Card Header -->
+        <div class="text-center mb-8 animate-slide-up">
+            <h1 class="text-4xl font-display font-bold text-white mb-3">
+                Welcome <span class="gradient-text">Back</span>
+            </h1>
+            <p class="text-gray-400">Sign in to continue your GATE preparation journey</p>
         </div>
 
-        <button id="google-login-btn"
-            class="w-full bg-white text-gray-900 py-3 rounded-lg font-semibold flex items-center justify-center gap-3 hover:bg-gray-100 transition-all hover:scale-[1.02]">
-            <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="h-6 w-6" alt="Google">
-            Sign in with Google
-        </button>
+        <!-- Login Card -->
+        <div class="glass border border-gray-800 rounded-3xl p-8 shadow-2xl animate-slide-up"
+            style="animation-delay: 0.1s;">
+            <form id="login-form" class="space-y-5">
+                <!-- Email Input -->
+                <div class="space-y-2">
+                    <label class="block text-gray-300 text-sm font-semibold" for="email">
+                        Email Address
+                    </label>
+                    <input
+                        class="w-full bg-dark-900/50 border border-gray-700 rounded-xl py-3.5 px-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent transition-all"
+                        id="email" type="email" placeholder="student@example.com" required>
+                </div>
 
-        <div class="mt-6 text-center">
+                <!-- Password Input -->
+                <div class="space-y-2">
+                    <label class="block text-gray-300 text-sm font-semibold" for="password">
+                        Password
+                    </label>
+                    <input
+                        class="w-full bg-dark-900/50 border border-gray-700 rounded-xl py-3.5 px-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent transition-all"
+                        id="password" type="password" placeholder="••••••••" required>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="group relative w-full mt-6">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-r from-accent-500 to-purple-500 rounded-xl blur opacity-75 group-hover:opacity-100 transition">
+                    </div>
+                    <div
+                        class="relative bg-gradient-to-r from-accent-600 to-purple-600 rounded-xl py-3.5 text-white font-bold hover:from-accent-500 hover:to-purple-500 transition-all">
+                        Sign In
+                    </div>
+                </button>
+            </form>
+
+            <!-- Divider -->
+            <div class="relative my-8">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-800"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                    <span class="px-4 glass text-gray-400">Or continue with</span>
+                </div>
+            </div>
+
+            <!-- Google Login -->
+            <button id="google-login-btn"
+                class="w-full bg-white hover:bg-gray-50 text-gray-900 py-3.5 rounded-xl font-semibold flex items-center justify-center gap-3 transition-all hover:shadow-lg">
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="h-5 w-5" alt="Google">
+                Sign in with Google
+            </button>
+        </div>
+
+        <!-- Footer Links -->
+        <div class="mt-6 text-center animate-slide-up" style="animation-delay: 0.2s;">
             <p class="text-gray-400 text-sm">
                 Don't have an account?
-                <a href="/signup" class="text-accent-400 hover:text-white transition-colors font-semibold">Sign Up</a>
+                <a href="/signup"
+                    class="text-accent-400 hover:text-accent-300 transition-colors font-semibold ml-1">Create
+                    Account</a>
             </p>
         </div>
     </div>
@@ -68,6 +101,7 @@
             window.location.href = '/dashboard';
         } else {
             console.error("Session login failed");
+            alert("Login failed. Please try again.");
         }
     }
 

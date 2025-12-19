@@ -1,5 +1,17 @@
-firebase-service-key.json
-.env
-venv/
+# Python
 __pycache__/
-error.log
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Secrets
+firebase-service-key.json
+
+# IDE
+.vscode/
+.idea/
+
+# System
+Thumbs.db
+Desktop.ini

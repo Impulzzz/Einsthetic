@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="dark scroll-smooth">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Einsthetic{% endblock %}</title>
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -14,27 +15,60 @@
                 extend: {
                     colors: {
                         dark: {
-                            900: '#0f172a',
-                            800: '#1e293b',
-                            700: '#334155',
+                            900: '#0a0f1e',
+                            800: '#151b2e',
+                            700: '#1e293b',
+                            600: '#2d3748',
                         },
                         accent: {
-                            500: '#6366f1', // Indigo 500
-                            400: '#818cf8', // Indigo 400
+                            600: '#5145cd',
+                            500: '#6366f1',
+                            400: '#818cf8',
+                            300: '#a5b4fc',
+                        },
+                        purple: {
+                            600: '#7c3aed',
+                            500: '#8b5cf6',
+                            400: '#a78bfa',
                         }
                     },
                     fontFamily: {
-                        sans: ['Outfit', 'sans-serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                        'float': 'float 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
                     }
                 }
             }
         }
     </script>
+
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+
     <!-- MathJax -->
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <!-- Firebase SDK (Modular CDNs for simplicity in this prototype, or compat) -->
+
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -42,62 +76,152 @@
     <script>
         window.MathJax = {
             tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']]
+                inlineMath: [['$', '$'], ['\\(', '\\)]]
             },
             chtml: {
                 displayAlign: 'left'
             }
         };
     </script>
+
     <style>
         body {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .font-display {
             font-family: 'Outfit', sans-serif;
         }
 
-        /* Force MathJax to inherit color or be white in dark mode */
+        /* Glassmorphism utility */
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Gradient text */
+        .gradient-text {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* MathJax dark mode */
         .mjx-chtml,
         .MathJax_Display,
         .MathJax {
             color: inherit !important;
         }
 
-        /* Fallback if inheritance fails */
         .dark .mjx-chtml,
         .dark .MathJax_Display,
         .dark .MathJax {
             color: #e2e8f0 !important;
-            /* gray-200 */
+        }
+
+        /* Smooth transitions */
+        * {
+            transition-property: color, background-color, border-color, box-shadow, transform;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 200ms;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0f1e;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
         }
     </style>
     {% block head %}{% endblock %}
 </head>
 
-<body class="bg-dark-900 text-white min-h-screen flex flex-col">
-    <!-- Navbar -->
-    <nav class="p-4 border-b border-gray-800 bg-dark-900/80 backdrop-blur-md sticky top-0 z-50">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="/" class="text-2xl font-bold tracking-tight text-accent-400">Einsthetic<span
-                    class="text-white">.AI</span></a>
-            <div id="nav-links" class="hidden space-x-6">
-                <a href="/dashboard" class="hover:text-accent-400 transition-colors">Dashboard</a>
-                <a href="/quiz" class="hover:text-accent-400 transition-colors">Quiz</a>
-                <button onclick="logout()" class="text-gray-400 hover:text-white transition-colors">Logout</button>
+<body class="bg-dark-900 text-gray-100 min-h-screen flex flex-col antialiased">
+    <!-- Enhanced Navbar -->
+    <nav class="sticky top-0 z-50 glass border-b border-gray-800/50">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <a href="/" class="flex items-center space-x-2 group">
+                    <div class="relative">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-r from-accent-500 to-purple-500 rounded-lg blur opacity-75 group-hover:opacity-100 transition">
+                        </div>
+                        <div class="relative bg-dark-900 rounded-lg p-2">
+                            <svg class="w-6 h-6 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z">
+                                </path>
+                            </svg>
+                        </div>
+                    </div>
+                    <span class="text-2xl font-display font-bold">
+                        <span class="gradient-text">Einsthetic</span><span class="text-white">.AI</span>
+                    </span>
+                </a>
+
+                <!-- Navigation Links -->
+                <div id="nav-links" class="hidden md:flex items-center space-x-8">
+                    <a href="/dashboard" class="text-gray-300 hover:text-white font-medium relative group">
+                        Dashboard
+                        <span
+                            class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-accent-500 to-purple-500 group-hover:w-full transition-all duration-300"></span>
+                    </a>
+                    <a href="/quiz-setup" class="text-gray-300 hover:text-white font-medium relative group">
+                        Quiz
+                        <span
+                            class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-accent-500 to-purple-500 group-hover:w-full transition-all duration-300"></span>
+                    </a>
+                    <button onclick="logout()"
+                        class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-red-500/10 to-pink-500/10 hover:from-red-500/20 hover:to-pink-500/20 text-red-400 font-medium border border-red-500/20 transition-all">
+                        Logout
+                    </button>
+                </div>
             </div>
         </div>
     </nav>
 
     <!-- Content -->
-    <main class="flex-grow container mx-auto p-6">
+    <main class="flex-grow container mx-auto px-6 py-8">
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Footer -->
-    <footer class="p-4 text-center text-gray-600 text-sm">
-        &copy; 2024 Einsthetic AI. Built for GATE Aspirants.
+    <!-- Enhanced Footer -->
+    <footer class="border-t border-gray-800/50 bg-dark-800/50 backdrop-blur-sm">
+        <div class="container mx-auto px-6 py-8">
+            <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                <div class="text-center md:text-left">
+                    <p class="text-gray-400 text-sm">
+                        © 2024 <span class="gradient-text font-semibold">Einsthetic.AI</span>
+                        <span class="mx-2">•</span>
+                        Built for GATE Aspirants
+                    </p>
+                </div>
+                <div class="flex items-center space-x-6 text-sm text-gray-500">
+                    <a href="#" class="hover:text-accent-400 transition">Privacy</a>
+                    <a href="#" class="hover:text-accent-400 transition">Terms</a>
+                    <a href="#" class="hover:text-accent-400 transition">Support</a>
+                </div>
+            </div>
+        </div>
     </footer>
 
+    <!-- Firebase & Scripts -->
     <script>
-        // Firebase Config (Placeholder - to be replaced by dynamic vars or explicit config)
         const firebaseConfig = {
             apiKey: "{{ config.apiKey }}",
             authDomain: "{{ config.authDomain }}",
@@ -114,7 +238,7 @@
             });
         }
 
-        // Show nav on protected routes or when Firebase user is authenticated
+        // Navigation visibility
         const protectedPaths = ['/dashboard', '/quiz', '/quiz-setup'];
         const currentPath = window.location.pathname;
         const isProtectedRoute = protectedPaths.some(path => currentPath.startsWith(path));
@@ -122,7 +246,6 @@
         firebase.auth().onAuthStateChanged(user => {
             const nav = document.getElementById('nav-links');
             if (user || isProtectedRoute) {
-                // Show nav if Firebase user exists OR if we're on a protected route
                 if (nav) nav.classList.remove('hidden');
             } else {
                 if (nav) nav.classList.add('hidden');
